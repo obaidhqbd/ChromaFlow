@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="ChromaFlow - Generate stunning color palettes with AI-powered suggestions, accessibility checks, and seamless export options."/>
+  <title>ChromaFlow | Premium Color Palette Generator</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css"/>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>"/>
+</head>
+<body>
+  <!-- Skip to Content for Accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Onboarding Tooltip -->
+  <div id="onboarding-tooltip" class="tooltip hidden" role="dialog" aria-live="polite">
+    <div class="tooltip-content">
+      <p>✨ <strong>Pro Tip:</strong> Press <kbd>SPACE</kbd> to generate new palettes instantly!</p>
+      <button id="tooltip-close" aria-label="Close tooltip">Got it</button>
+    </div>
+    <div class="tooltip-arrow"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header glass">
+    <div class="header__container">
+      <div class="logo">
+        <span class="logo__icon" aria-hidden="true">🎨</span>
+        <h1 class="logo__text">ChromaFlow</h1>
+      </div>
+      
+      <nav class="controls" role="toolbar" aria-label="Main controls">
+        <button id="generate-btn" class="btn btn--primary" aria-keyshortcuts="Space" title="Generate new palette (Space)">
+          <span class="btn__icon">🔄</span>
+          <span class="btn__text">Generate</span>
+        </button>
+        
+        <button id="theme-toggle" class="btn btn--icon" aria-label="Toggle dark mode" title="Toggle theme">
+          <span class="theme-icon--light">☀️</span>
+          <span class="theme-icon--dark">🌙</span>
+        </button>
+        
+        <button id="fullscreen-btn" class="btn btn--icon" aria-label="Toggle fullscreen" title="Fullscreen mode">
+          <span class="fullscreen-icon--enter">⛶</span>
+          <span class="fullscreen-icon--exit">⤢</span>
+        </button>
+        
+        <button id="settings-btn" class="btn btn--icon" aria-label="Open settings" title="Settings">
+          ⚙️
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content" class="main">
+    <!-- Palette Display -->
+    <section class="palette-container" id="palette-container" aria-live="polite">
+      <!-- Colors injected by JS -->
+    </section>
+
+    <!-- Advanced Controls Panel (Collapsible) -->
+    <aside class="controls-panel glass" id="controls-panel" aria-label="Advanced controls">
+      <div class="panel-header">
+        <h2>Advanced Controls</h2>
+        <button id="panel-toggle" class="btn btn--icon btn--small" aria-expanded="true" aria-controls="panel-content">
+          ▼
+        </button>
+      </div>
+      
+      <div id="panel-content" class="panel-content">
+        <!-- Color Adjustment -->
+        <div class="control-group">
+          <label for="hue-slider">Hue</label>
+          <input type="range" id="hue-slider" min="0" max="360" value="0"/>
+          
+          <label for="saturation-slider">Saturation</label>
+          <input type="range" id="saturation-slider" min="0" max="100" value="100"/>
+          
+          <label for="brightness-slider">Brightness</label>
+          <input type="range" id="brightness-slider" min="0" max="100" value="100"/>
+        </div>
+
+        <!-- AI Suggestions -->
+        <div class="control-group">
+          <h3>Smart Suggestions</h3>
+          <div class="suggestion-chips">
+            <button class="chip" data-rule="complementary">Complementary</button>
+            <button class="chip" data-rule="analogous">Analogous</button>
+            <button class="chip" data-rule="triadic">Triadic</button>
+            <button class="chip" data-rule="monochromatic">Monochrome</button>
+          </div>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="control-group">
+          <label for="image-upload">Extract from Image</label>
+          <input type="file" id="image-upload" accept="image/*" hidden/>
+          <button id="upload-btn" class="btn btn--secondary">🖼️ Upload Image</button>
+          <div id="image-preview" class="image-preview hidden"></div>
+        </div>
+
+        <!-- Contrast Checker -->
+        <div class="control-group">
+          <h3>Accessibility Check</h3>
+          <div id="contrast-results" class="contrast-results">
+            <p class="contrast-hint">Select two colors to check WCAG contrast ratio</p>
+          </div>
+        </div>
+
+        <!-- Gradient Generator -->
+        <div class="control-group">
+          <h3>Gradient Preview</h3>
+          <div id="gradient-preview" class="gradient-preview"></div>
+          <button id="copy-gradient" class="btn btn--small">Copy CSS</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- History & Favorites -->
+    <aside class="history-panel glass" id="history-panel">
+      <div class="panel-tabs">
+        <button class="tab-btn active" data-tab="history">History</button>
+        <button class="tab-btn" data-tab="favorites">Favorites</button>
+      </div>
+      
+      <div id="history-content" class="tab-content active">
+        <div class="history-list" id="history-list">
+          <!-- History items injected by JS -->
+        </div>
+        <button id="undo-btn" class="btn btn--small" disabled>↩ Undo</button>
+        <button id="redo-btn" class="btn btn--small" disabled>↪ Redo</button>
+      </div>
+      
+      <div id="favorites-content" class="tab-content">
+        <div class="favorites-list" id="favorites-list">
+          <!-- Favorites injected by JS -->
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Export Modal -->
+  <dialog id="export-modal" class="modal glass">
+    <div class="modal__content">
+      <h2>Export Palette</h2>
+      
+      <div class="export-options">
+        <button class="export-option" data-format="png">
+          <span class="export-icon">🖼️</span>
+          <span>PNG Image</span>
+        </button>
+        <button class="export-option" data-format="css">
+          <span class="export-icon">🎨</span>
+          <span>CSS Variables</span>
+        </button>
+        <button class="export-option" data-format="json">
+          <span class="export-icon">📦</span>
+          <span>JSON</span>
+        </button>
+        <button class="export-option" data-format="link">
+          <span class="export-icon">🔗</span>
+          <span>Shareable Link</span>
+        </button>
+      </div>
+      
+      <div id="export-output" class="export-output hidden">
+        <pre><code id="export-code"></code></pre>
+        <button id="copy-export" class="btn btn--primary">Copy to Clipboard</button>
+      </div>
+      
+      <button id="close-export" class="btn btn--secondary modal__close">Close</button>
+    </div>
+  </dialog>
+
+  <!-- Settings Modal -->
+  <dialog id="settings-modal" class="modal glass">
+    <div class="modal__content">
+      <h2>Settings</h2>
+      
+      <div class="settings-group">
+        <label>
+          <input type="checkbox" id="sound-toggle"/>
+          Enable sound feedback
+        </label>
+        <label>
+          <input type="checkbox" id="animations-toggle" checked/>
+          Enable animations
+        </label>
+        <label>
+          <input type="checkbox" id="auto-save-toggle" checked/>
+          Auto-save palettes
+        </label>
+      </div>
+      
+      <div class="settings-group">
+        <label for="palette-size">Colors per palette:</label>
+        <select id="palette-size">
+          <option value="4">4 colors</option>
+          <option value="5" selected>5 colors</option>
+          <option value="6">6 colors</option>
+        </select>
+      </div>
+      
+      <button id="close-settings" class="btn btn--secondary modal__close">Close</button>
+    </div>
+  </dialog>
+
+  <!-- Toast Notifications -->
+  <div id="toast-container" class="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- Hidden canvas for PNG export -->
+  <canvas id="export-canvas" hidden></canvas>
+  
+  <!-- Audio for feedback -->
+  <audio id="click-sound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLHPM8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJm7J8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZUA4NVKzn77BdGAg+ltryxnMuBSFnxu7glk4NDlCp4u25YxwFLG7H7t2STw0OUqjh7LljHAUqa8Xs25NPDQ5Rpt/su2QdBSlpxezakU4NDlKj3eq8ZB0FKWrE69mSTg0OUqLc6b5lHgUqa8Tr2ZNPAA5ToNvmwGYfBilhweOYUw8OKV6+349VDw4pW7rZiFgQDihZt9aJWg8OKFi11IdbDw4oV7PRhVwQDihWrM6DXBAOJ1WqzIRcEA4nVKjJg1wQDidTp8aBXBAOJlKmwX5cEA4lUaW8e1wQDiRPpLp5XBAMI02juHZcEAwjS6G2dFwQDCJKn7RzXBAMI0mcsnFcEAwjSJyvcFwQDCRHmq1vXBAMI0aZq25cEAwjRZiqbVwQDCNDl6hrXBAMI0KVoGpcEAwjQZOgaVwQDCNAkJ5nXBAMIz6OnWVcEAwjPYqZY1wQDCM8hJZfXBAMIzqCkF1cEAwjOYGNW1wQDCM2f4tZXBAMIzR6hVZcEAwjM3aBVVwQDCMydH9TXBAMIzFxeU9cEAwjMG90S1wQDCMvaXJJXBAMIy5ncEZcEAwjLWVvQ1wQDCMrZG4+XBAMIipjbDxcEAwiKWJrOlwQDCInYWo3XBAMIiVgZzVcEAwiJF9lM1wQDCIiXmQxXBAMIiFdYi9cEAwiIFtfLlwQDCIfWl0sXBAMIh5ZXCtcEAwiHVhbKlwQDCIcV1koXBAMIhtWViZcEAwiG1RTJVwQDCIaU1EkXBAMIhlRUCNcEAwiGU9OIlwQDCIYTUwhXBAMIhdLSh9cEAwiFklIHVwQDCIVR0gbXBAMIhREQxlcEAwiE0M+GVwQDCISQjkXXBAMIhE/NhVcEAwiED0yE1wQDCIPPC4RXBAMIg07Lg9cEAwiDDksDVwQDCILNyoLXBAMIgo1JglcEAwiCTQnB1wQDCIIMiUEXBAMIgcyJAJcEAwiBjEiA1wQDCIFMB4BXBAMIgMtHP5bEAwiAioa+lsQDCICJxn4WxAMIgEkGfVbEAwiASIX81sQDCIBIBXxWxAMIgAcE+9bEAwgABgR7FsQDB8AFw7rWxAMHwAUDupbEAweABUN6VsQDB0AFAnoWxAMHAAXCOZaEAwbABUH5VkQDBkAFQTkWBAMGQAVBOJXEAwYABQC4FYQDBcAFADfVhAMFgAUAeBVEAwVABQA3lUQDBQAFADdVhAMFQAUANxWEAwUABQA21YQDBQAFADaVhAMEwAUANlWEAwSABQA2FYQDBEAFADXVhAMEwAUANZWEAwSABQA1FYQDBIAFADTVhAMEwAUANJWEAwSABQA0VYQDBIAFADQVhAMEwAUAM9WEAwTABQAzlYQDBMAFADNVhAMEwAUAMxWEAwTABQAy1YQDBMAFADKVhAMEwAUAMlWEAwTABQAyFYQDBMAFADHVhAMEwAUAMZWEAwTABQAxFYQDBMAFADCVhAMEwAUAMFWEAwTABQA" type="audio/wav"/>
+  </audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
